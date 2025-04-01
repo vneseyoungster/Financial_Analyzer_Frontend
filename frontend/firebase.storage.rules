@@ -1,0 +1,19 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Allow read access to all authenticated users
+    match /financial_documents/{allPaths=**} {
+      // For MVP, we'll allow read/write access without authentication
+      // In production, you should restrict access to authenticated users only
+      allow read, write: if true;
+      
+      // For a more secure setup, use these rules instead:
+      // allow read, write: if request.auth != null;
+    }
+    
+    // Default deny all
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+} 
