@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { Container, Box, Typography, Paper, useTheme } from '@mui/material';
+import { Box, Typography, Paper, Button, useTheme, Stack } from '@mui/material';
 import CategoryFileUpload, { UploadedFile } from '../../components/FileUpload/CategoryFileUpload';
 import { useNavigate } from 'react-router-dom';
 
@@ -46,7 +46,6 @@ const UploadDocumentsPage: React.FC = () => {
   const handleUploadComplete = (files: UploadedFile[]) => {
     // Store files in memory instead of uploading to Firebase
     // We'll use window.uploadedFiles as a simple global store
-    // In a real app, you'd use Context API or a state management library
     window.uploadedFiles = files;
     
     // Store minimal metadata in sessionStorage for page refreshes
@@ -62,6 +61,18 @@ const UploadDocumentsPage: React.FC = () => {
     
     // Navigate to the processing page
     navigate('/processing-documents');
+  };
+
+  // Handle mock data run
+  const handleMockDataRun = () => {
+    // Set flag to use mock data in session storage
+    sessionStorage.setItem('useMockData', 'true');
+    
+    // Mark processing as complete to avoid redirect back to upload
+    sessionStorage.setItem('processingComplete', 'true');
+    
+    // Navigate directly to results page
+    navigate('/view-results');
   };
 
   return (
@@ -101,6 +112,17 @@ const UploadDocumentsPage: React.FC = () => {
           <Typography variant="subtitle1" color="text.secondary">
             Start by uploading images of your financial documents
           </Typography>
+          
+          <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 2 }}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={handleMockDataRun}
+              sx={{ borderRadius: 2 }}
+            >
+              Mock Data Run
+            </Button>
+          </Stack>
         </Box>
         
         <CategoryFileUpload onComplete={handleUploadComplete} />
